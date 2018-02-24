@@ -281,7 +281,7 @@ LOCAL_MODULE := login
 LOCAL_MODULE_CLASS := EXECUTABLES
 LOCAL_MODULE_PATH := $(TARGET_OUT)/bin
 LOCAL_SRC_FILES := ../../../../$(TARGET_OUT)/xbin/$(LOCAL_MODULE)
-LOCAL_REQUIRED_MODULES := login_recovery static_busybox passwd passwd_recovery
+LOCAL_REQUIRED_MODULES := login_recovery busybox passwd passwd_recovery
 $(info "add console passwd protect end")
 include $(BUILD_PREBUILT)
 

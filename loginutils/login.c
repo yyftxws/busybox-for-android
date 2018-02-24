@@ -573,7 +573,14 @@ int login_main(int argc UNUSED_PARAM, char **argv)
 	if (ENABLE_LOGIN_SCRIPTS && run_by_root)
 		run_login_script(pw, full_tty);
 
+/* add by Young@2018,2,9 to aviod selinux permission */
+#if !defined(ANDROID)
+/* Young modify end */
 	change_identity(pw);
+/* add by Young@2018,2,9 to aviod selinux permission */
+#endif
+/* Young modify end */
+
 	setup_environment(pw->pw_shell,
 			(!(opt & LOGIN_OPT_p) * SETUP_ENV_CLEARENV) + SETUP_ENV_CHANGEENV,
 			pw);
