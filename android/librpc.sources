@@ -16,7 +16,6 @@ android/librpc/getrpcport.c
 android/librpc/pmap_clnt.c
 android/librpc/pmap_prot2.c
 android/librpc/pmap_prot.c
-android/librpc/pmap_rmt.c
 android/librpc/pm_getmaps.c
 android/librpc/pm_getport.c
 android/librpc/rpc_cmsg.c

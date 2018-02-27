@@ -29,7 +29,10 @@ void FAST_FUNC bb_verror_msg(const char *s, va_list p, const char* strerr)
 	if (!s) /* nomsg[_and_die] uses NULL fmt */
 		s = ""; /* some libc don't like printf(NULL) */
 
-	applet_len = strlen(applet_name) + 2; /* "applet: " */
+	if(NULL != applet_name)
+	    applet_len = strlen(applet_name) + 2; /* "applet: " */
+	else
+	    applet_len = 2;
 	strerr_len = strerr ? strlen(strerr) : 0;
 	msgeol_len = strlen(msg_eol);
 
@@ -72,7 +75,8 @@ void FAST_FUNC bb_verror_msg(const char *s, va_list p, const char* strerr)
 		memmove(msg + applet_len, msg, used);
 		used += applet_len;
  add_pfx_and_sfx:
-		strcpy(msg, applet_name);
+		if(NULL != applet_name)
+			strcpy(msg, applet_name);
 		msg[applet_len - 2] = ':';
 		msg[applet_len - 1] = ' ';
 		if (strerr) {
@@ -144,7 +148,10 @@ void FAST_FUNC bb_verror_msg(const char *s, va_list p, const char* strerr)
 
 	if (logmode & LOGMODE_STDIO) {
 		iov[0].iov_base = (char*)applet_name;
-		iov[0].iov_len = strlen(applet_name);
+		if(NULL != applet_name)
+			iov[0].iov_len = strlen(applet_name);
+		else
+			iov[0].iov_len = 0;
 		iov[1].iov_base = (char*)": ";
 		iov[1].iov_len = 2;
 		/*iov[2].iov_base = msgc;*/

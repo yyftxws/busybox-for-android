@@ -215,7 +215,11 @@ int adduser_main(int argc UNUSED_PARAM, char **argv)
 		bb_error_msg_and_die("%s", bb_msg_perm_denied_are_you_root);
 	}
 
+#if defined(BIONIC_ICS) && !defined(BIONIC_L)
+//	pw.pw_gecos = (char *)"Linux User,,,";
+#else
 	pw.pw_gecos = (char *)"Linux User,,,";
+#endif
 	/* We assume that newly created users "inherit" root's shell setting */
 	pw.pw_shell = (char *)get_shell_name();
 	pw.pw_dir = NULL;
@@ -223,7 +227,11 @@ int adduser_main(int argc UNUSED_PARAM, char **argv)
 	/* at least one and at most two non-option args */
 	/* disable interactive passwd for system accounts */
 	opt_complementary = "-1:?2:SD";
+#if defined(BIONIC_ICS) && !defined(BIONIC_L)
+	opts = getopt32(argv, "h:g:s:G:DSHu:k:", &pw.pw_dir, &pw.pw_name, &pw.pw_shell, &usegroup, &uid, &skel);
+#else
 	opts = getopt32(argv, "h:g:s:G:DSHu:k:", &pw.pw_dir, &pw.pw_gecos, &pw.pw_shell, &usegroup, &uid, &skel);
+#endif
 	if (opts & OPT_UID)
 		pw.pw_uid = xatou_range(uid, 0, CONFIG_LAST_ID);
 
@@ -257,9 +265,15 @@ int adduser_main(int argc UNUSED_PARAM, char **argv)
 	/* make sure everything is kosher and setup uid && maybe gid */
 	passwd_study(&pw);
 
+#if defined(BIONIC_ICS) && !defined(BIONIC_L)
+	p = xasprintf("x:%u:%u:%s:%s:%s",
+			(unsigned) pw.pw_uid, (unsigned) pw.pw_gid,
+			pw.pw_name, pw.pw_dir, pw.pw_shell);
+#else
 	p = xasprintf("x:%u:%u:%s:%s:%s",
 			(unsigned) pw.pw_uid, (unsigned) pw.pw_gid,
 			pw.pw_gecos, pw.pw_dir, pw.pw_shell);
+#endif
 	if (update_passwd(bb_path_passwd_file, pw.pw_name, p, NULL) < 0) {
 		return EXIT_FAILURE;
 	}

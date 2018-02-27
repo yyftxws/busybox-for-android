@@ -58,7 +58,7 @@ loginutils/cryptpw.c
 
 
 miscutils/adjtimex.c miscutils/bbconfig.c miscutils/crond.c miscutils/crontab.c miscutils/dc.c miscutils/devmem.c miscutils/fbsplash.c miscutils/flash_lock_unlock.c miscutils/flashcp.c miscutils/ionice.c miscutils/less.c miscutils/man.c miscutils/mountpoint.c miscutils/nandwrite.c miscutils/rx.c miscutils/setserial.c miscutils/setsid.c miscutils/strings.c miscutils/taskset.c miscutils/time.c miscutils/timeout.c miscutils/ttysize.c
-miscutils/i2c_tools.c miscutils/ubirename.c
+miscutils/ubirename.c
 modutils/depmod.c modutils/insmod.c modutils/lsmod.c modutils/modinfo.c modutils/modprobe.c modutils/modutils.c modutils/rmmod.c
 networking/arp.c networking/brctl.c networking/dnsd.c networking/ftpgetput.c networking/ifconfig.c networking/inetd.c networking/interface.c networking/ip.c networking/nbd-client.c networking/nc.c networking/netstat.c networking/nslookup.c networking/ntpd.c networking/ping.c networking/route.c networking/telnet.c networking/telnetd.c networking/tftp.c networking/traceroute.c networking/wget.c
 networking/libiproute/ip_parse_common_args.c networking/libiproute/ipaddress.c networking/libiproute/iplink.c networking/libiproute/iproute.c networking/libiproute/iprule.c networking/libiproute/libnetlink.c networking/libiproute/ll_addr.c networking/libiproute/ll_map.c networking/libiproute/ll_proto.c networking/libiproute/ll_types.c networking/libiproute/rt_names.c networking/libiproute/rtm_map.c networking/libiproute/utils.c
@@ -70,11 +70,6 @@ procps/pmap.c procps/iostat.c procps/mpstat.c
 procps/lsof.c procps/nmeter.c procps/pstree.c procps/pwdx.c procps/smemcap.c
 
 shell/ash.c shell/ash_ptr_hack.c shell/math.c shell/random.c shell/shell_common.c
-
-libbb/selinux_common.c android/selinux/matchpathcon.c android/selinux/stubs.c
-selinux/chcon.c selinux/selinuxenabled.c
-selinux/getenforce.c selinux/sestatus.c selinux/setsebool.c
-selinux/getsebool.c selinux/runcon.c selinux/setenforce.c selinux/setfiles.c selinux/matchpathcon.c
 
 runit/sv.c
 

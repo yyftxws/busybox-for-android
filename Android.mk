@@ -3,8 +3,8 @@ LOCAL_PATH := $(call my-dir)
 BB_PATH := $(LOCAL_PATH)
 
 # Bionic Branches Switches (GB/ICS/L)
-BIONIC_ICS := false
-BIONIC_L := true
+BIONIC_ICS := true
+BIONIC_L := false
 
 # Make a static library for regex.
 include $(CLEAR_VARS)
@@ -103,8 +103,11 @@ SUBMAKE := make -s -C $(BB_PATH) CC=$(CC)
 BUSYBOX_SRC_FILES = \
 	$(shell cat $(BB_PATH)/busybox-$(BUSYBOX_CONFIG).sources) \
 	android/libc/mktemp.c \
-	android/libc/pty.c \
 	android/android.c
+
+ifeq ($(BIONIC_L),true)
+BUSYBOX_SRC_FILES += android/libc/pty.c
+endif
 
 BUSYBOX_ASM_FILES =
 ifneq ($(BIONIC_L),true)
@@ -130,7 +133,6 @@ BUSYBOX_C_INCLUDES = \
 
 BUSYBOX_CFLAGS = \
 	-Werror=implicit -Wno-clobbered \
-	-Wno-int-conversion \
 	-Wno-implicit-function-declaration \
 	-DLOGIN_NAME_MAX=128 \
 	-DNDEBUG \
@@ -255,7 +257,7 @@ LOCAL_MODULE_STEM := busybox
 LOCAL_MODULE_TAGS := optional
 LOCAL_STATIC_LIBRARIES := libclearsilverregex libc libcutils libm libuclibcrpc libselinux
 LOCAL_MODULE_CLASS := EXECUTABLES
-LOCAL_MODULE_PATH := $(PRODUCT_OUT)/utilities/bin
+LOCAL_MODULE_PATH := $(PRODUCT_OUT)/utilities
 LOCAL_UNSTRIPPED_PATH := $(PRODUCT_OUT)/symbols/utilities
 #$(LOCAL_MODULE): busybox_prepare
 LOCAL_ADDITIONAL_DEPENDENCIES := $(busybox_prepare_minimal)
@@ -276,26 +278,64 @@ ALL_DEFAULT_INSTALLED_MODULES += $(SYMLINKS)
 
 include $(CLEAR_VARS)
 $(info "add console passwd protect start")
+BUSYBOX_CONFIG:=minimal
+BUSYBOX_SUFFIX:=static
+LOCAL_C_INCLUDES := $(bb_gen)/minimal/include $(BUSYBOX_C_INCLUDES)
+LOCAL_CFLAGS := $(BUSYBOX_CFLAGS)
+LOCAL_ASFLAGS := $(BUSYBOX_AFLAGS)
+LOCAL_CFLAGS += \
+  -Dlogin_main=main \
+  -Dgetgrgid=busybox_getgrgid \
+  -Dgetgrnam=busybox_getgrnam \
+  -Dgetgrouplist=busybox_getgrouplist \
+  -Dgetpwnam=busybox_getpwnam \
+  -Dgetpwnam_r=busybox_getpwnam_r \
+  -Dgetpwuid=busybox_getpwuid \
+  -Dgetmntent=busybox_getmntent \
+  -Dgetmntent_r=busybox_getmntent_r \
+  -Dendpwent=busybox_endpwent
+
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := login
 LOCAL_MODULE_CLASS := EXECUTABLES
 LOCAL_MODULE_PATH := $(TARGET_OUT)/bin
-LOCAL_SRC_FILES := ../../../../$(TARGET_OUT)/xbin/$(LOCAL_MODULE)
-LOCAL_REQUIRED_MODULES := login_recovery busybox passwd passwd_recovery
+LOCAL_SRC_FILES := loginutils/login.c
+LOCAL_STATIC_LIBRARIES := libbusybox libclearsilverregex libc libcutils libm libuclibcrpc libselinux
+LOCAL_REQUIRED_MODULES := login_recovery passwd passwd_recovery
+LOCAL_ADDITIONAL_DEPENDENCIES := $(busybox_prepare_minimal)
 $(info "add console passwd protect end")
-include $(BUILD_PREBUILT)
+include $(BUILD_EXECUTABLE)
 
 include $(CLEAR_VARS)
-$(info "add console passwd protect start")
+$(info "add console passwd protect start ---$(bb_gen)")
+BUSYBOX_CONFIG:=minimal
+BUSYBOX_SUFFIX:=static
+LOCAL_C_INCLUDES := $(bb_gen)/minimal/include $(BUSYBOX_C_INCLUDES)
+LOCAL_CFLAGS := $(BUSYBOX_CFLAGS)
+LOCAL_ASFLAGS := $(BUSYBOX_AFLAGS)
+LOCAL_CFLAGS += \
+  -Dlogin_main=main \
+  -Dgetgrgid=busybox_getgrgid \
+  -Dgetgrnam=busybox_getgrnam \
+  -Dgetgrouplist=busybox_getgrouplist \
+  -Dgetpwnam=busybox_getpwnam \
+  -Dgetpwnam_r=busybox_getpwnam_r \
+  -Dgetpwuid=busybox_getpwuid \
+  -Dgetmntent=busybox_getmntent \
+  -Dgetmntent_r=busybox_getmntent_r \
+  -Dendpwent=busybox_endpwent
+
 LOCAL_MODULE_TAGS := optional
-LOCAL_MODULE := login_recovery
 LOCAL_MODULE_STEM := login
+LOCAL_MODULE := login_recovery
 LOCAL_MODULE_CLASS := EXECUTABLES
 LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)/sbin
-LOCAL_SRC_FILES := ../../../../$(PRODUCT_OUT)/utilities/bin/$(LOCAL_MODULE_STEM)
-LOCAL_REQUIRED_MODULES := static_busybox passwd passwd_recovery
+LOCAL_SRC_FILES := loginutils/login.c
+LOCAL_STATIC_LIBRARIES := libbusybox libclearsilverregex libc libcutils libm libuclibcrpc libselinux
+LOCAL_REQUIRED_MODULES := passwd passwd_recovery
+LOCAL_ADDITIONAL_DEPENDENCIES := $(busybox_prepare_minimal)
 $(info "add console passwd protect end")
-include $(BUILD_PREBUILT)
+include $(BUILD_EXECUTABLE)
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := passwd

@@ -68,7 +68,11 @@ static const struct const_passdb const_pw_db = {
 		offsetof(struct passwd, pw_passwd),     /* 1 s */
 		offsetof(struct passwd, pw_uid),        /* 2 I */
 		offsetof(struct passwd, pw_gid),        /* 3 I */
+#if defined(BIONIC_ICS) && !defined(BIONIC_L)
+//		offsetof(struct passwd, pw_gecos),      /* 4 s */
+#else
 		offsetof(struct passwd, pw_gecos),      /* 4 s */
+#endif
 		offsetof(struct passwd, pw_dir),        /* 5 s */
 		offsetof(struct passwd, pw_shell)       /* 6 s */
 	},
