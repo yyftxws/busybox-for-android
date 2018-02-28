@@ -65,7 +65,11 @@
 #include <termios.h>
 #include <time.h>
 #include <sys/param.h>
+#if defined(BIONIC_ICS) && !defined(BIONIC_L)
+#include "pwd_ics.h"
+#else
 #include <pwd.h>
+#endif
 #include <grp.h>
 #if ENABLE_FEATURE_SHADOWPASSWDS
 # if !ENABLE_USE_BB_SHADOW

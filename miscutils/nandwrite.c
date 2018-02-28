@@ -106,6 +106,9 @@ static unsigned next_good_eraseblock(int fd, struct mtd_info_user *meminfo,
 	}
 }
 
+#if defined(BIONIC_ICS) && !defined(BIONIC_L)
+#define MTD_FILE_MODE_RAW 3
+#endif
 int nandwrite_main(int argc, char **argv) MAIN_EXTERNALLY_VISIBLE;
 int nandwrite_main(int argc UNUSED_PARAM, char **argv)
 {
