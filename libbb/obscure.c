@@ -189,11 +189,7 @@ int FAST_FUNC obscure(const char *old, const char *newval, const struct passwd *
 
 static const struct passwd pw = {
 	.pw_name = (char *)"johndoe",
-#if defined(BIONIC_ICS) && !defined(BIONIC_L)
-//	.pw_gecos = (char *)"John Doe",
-#else
 	.pw_gecos = (char *)"John Doe",
-#endif
 };
 
 BBUNIT_DEFINE_TEST(obscure_weak_pass)

@@ -577,14 +577,13 @@ int login_main(int argc UNUSED_PARAM, char **argv)
 #if !defined(ANDROID)
 /* Young modify end */
 	change_identity(pw);
-/* add by Young@2018,2,9 to aviod selinux permission */
-#endif
-/* Young modify end */
 
 	setup_environment(pw->pw_shell,
 			(!(opt & LOGIN_OPT_p) * SETUP_ENV_CLEARENV) + SETUP_ENV_CHANGEENV,
 			pw);
-
+/* add by Young@2018,2,9 to aviod selinux permission */
+#endif
+/* Young modify end */
 #if ENABLE_PAM
 	/* Modules such as pam_env will setup the PAM environment,
 	 * which should be copied into the new environment. */

@@ -68,11 +68,7 @@ static const struct const_passdb const_pw_db = {
 		offsetof(struct passwd, pw_passwd),     /* 1 s */
 		offsetof(struct passwd, pw_uid),        /* 2 I */
 		offsetof(struct passwd, pw_gid),        /* 3 I */
-#if defined(BIONIC_ICS) && !defined(BIONIC_L)
-//		offsetof(struct passwd, pw_gecos),      /* 4 s */
-#else
 		offsetof(struct passwd, pw_gecos),      /* 4 s */
-#endif
 		offsetof(struct passwd, pw_dir),        /* 5 s */
 		offsetof(struct passwd, pw_shell)       /* 6 s */
 	},
@@ -257,6 +253,9 @@ static void *convert_to_struct(struct passdb *db,
 	const char *def = db->def;
 	const uint8_t *off = db->off;
 
+#if defined(BIONIC_ICS) && !defined(BIONIC_L)
+	int err = 0;
+#endif
 	/* For consistency, zero out all fields */
 	memset(result, 0, db->size_of);
 
@@ -266,7 +265,11 @@ static void *convert_to_struct(struct passdb *db,
 		if ((*def | 0x20) == 's') { /* s or S */
 			*(char **)member = (char*)buffer;
 			if (!buffer[0] && (*def == 'S')) {
+#if defined(BIONIC_ICS) && !defined(BIONIC_L)
+				err = errno = EINVAL;
+#else
 				errno = EINVAL;
+#endif
 			}
 		}
 		if (*def == 'I') {
@@ -311,7 +314,11 @@ static void *convert_to_struct(struct passdb *db,
 		buffer += strlen(buffer) + 1;
 	}
 
+#if defined(BIONIC_ICS) && !defined(BIONIC_L)
+	if (0!=err)
+#else
 	if (errno)
+#endif
 		result = NULL;
 	return result;
 }
