@@ -133,6 +133,7 @@ extern int selinux_check_passwd_access(access_vector_t requested);
 
 #define selinux_policy_root() "/sepolicy"
 
+#if ANDROID_PLATFORM_SDK_VERSION < 26 //8.0
 static int selinux_getenforcemode(int *rc)
 {
 	if (rc) {
@@ -141,6 +142,10 @@ static int selinux_getenforcemode(int *rc)
 	}
 	return -1;
 }
+#else
+extern int selinux_getenforcemode(int *rc);
+
+#endif
 
 static const char *selinux_file_contexts_path()
 {

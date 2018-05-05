@@ -45,6 +45,9 @@ extern long __set_errno(int n);
 #include <sys/socket.h>
 #include <netinet/in.h>
 
+#if ANDROID_PLATFORM_SDK_VERSION >= 26 //8.0
+#include <netdb.h>
+#endif
 
 /*
  * Bind a socket to a privileged IP port

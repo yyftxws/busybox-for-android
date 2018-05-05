@@ -40,3 +40,4 @@ android/librpc/xdr_mem.c
 android/librpc/xdr_rec.c
 android/librpc/xdr_reference.c
 android/librpc/xdr_stdio.c
+android/selinux/android_selinux.c

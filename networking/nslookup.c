@@ -42,7 +42,9 @@
 # if ENABLE_FEATURE_IPV6
 #  include <netinet/in6.h>
 # endif
+#if ANDROID_PLATFORM_SDK_VERSION < 26 //8.0
 # define ANDROID_CHANGES
+#endif
 # ifdef BIONIC_L
 #  include <arpa/nameser.h>
 #  include <dns/include/resolv_private.h>

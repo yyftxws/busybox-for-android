@@ -76,6 +76,7 @@ int addmntent(FILE *fp UNUSED_PARAM, const struct mntent *mnt UNUSED_PARAM)
 	return 1;
 }
 
+#if ANDROID_PLATFORM_SDK_VERSION < 26 //8.0
 char *hasmntopt(const struct mntent *mnt, const char *opt)
 {
 	char *o = mnt->mnt_opts;
@@ -86,6 +87,7 @@ char *hasmntopt(const struct mntent *mnt, const char *opt)
 			 (o[l] != 0 && o[l] != ',' && o[l] != '=')));
 	return o;
 }
+#endif
 
 /* declared in grp.h, but not necessary */
 #if !ENABLE_USE_BB_PWD_GRP

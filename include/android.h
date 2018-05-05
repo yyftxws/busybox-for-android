@@ -76,7 +76,9 @@ struct mntent;
 struct __sFILE;
 int addmntent(struct __sFILE *, const struct mntent *);
 struct mntent *getmntent_r(struct __sFILE *fp, struct mntent *mnt, char *buf, int buflen);
+#if ANDROID_PLATFORM_SDK_VERSION < 26 //8.0
 char *hasmntopt(const struct mntent *, const char *);
+#endif
 
 #define MNTOPT_NOAUTO "noauto"
 
