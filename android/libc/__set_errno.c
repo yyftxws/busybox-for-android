@@ -28,6 +28,9 @@
 
 #include <errno.h>
 
+#if ANDROID_PLATFORM_SDK_VERSION >= 28 //9.0
+#define __LP64__
+#endif
 #ifdef __LP64__
 
 /* __set_errno was mistakenly exposed in <errno.h> in the 32-bit NDK.
