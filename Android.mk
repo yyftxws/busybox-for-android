@@ -130,6 +130,8 @@ SUBMAKE := make -s -C $(BB_PATH) CC=$(CC)
 BUSYBOX_SRC_FILES = \
 	$(shell cat $(BB_PATH)/busybox-$(BUSYBOX_CONFIG).sources) \
 	android/libc/mktemp.c \
+	android/libc/pty.c \
+	shell/ash_80.c \
 	android/android.c
 
 ifeq ($(BIONIC_L),true)
@@ -162,6 +164,19 @@ BUSYBOX_CFLAGS = \
 	-Werror=implicit -Wno-clobbered \
 	-Wno-int-conversion \
 	-Wno-implicit-function-declaration \
+	-Wno-macro-redefined \
+	-Wno-unused-function \
+	-Wno-non-literal-null-conversion \
+	-Wno-logical-not-parentheses \
+	-Wno-sign-compare \
+	-Wno-string-plus-int \
+	-Wno-unused-variable \
+	-Wno-string-plus-int \
+	-Wno-constant-logical-operand \
+	-Wno-shift-negative-value \
+	-Wno-format \
+	-Wno-initializer-overrides \
+	-Wno-pointer-arith \
 	-DLOGIN_NAME_MAX=128 \
 	-DNDEBUG \
 	-DANDROID \
@@ -170,7 +185,16 @@ BUSYBOX_CFLAGS = \
 	-include $(bb_gen)/$(BUSYBOX_CONFIG)/include/autoconf.h \
 	-D'CONFIG_DEFAULT_MODULES_DIR="$(KERNEL_MODULES_DIR)"' \
 	-D'BB_VER="$(strip $(shell $(SUBMAKE) kernelversion)) $(BUSYBOX_SUFFIX)"' -DBB_BT=AUTOCONF_TIMESTAMP \
-	-DANDROID_PLATFORM_SDK_VERSION=$(PLATFORM_SDK_VERSION)
+	-DANDROID_PLATFORM_SDK_VERSION=$(PLATFORM_SDK_VERSION) \
+	-Dgetgrgid=busybox_getgrgid \
+	-Dgetgrnam=busybox_getgrnam \
+	-Dgetgrouplist=busybox_getgrouplist \
+	-Dgetpwnam=busybox_getpwnam \
+	-Dgetpwnam_r=busybox_getpwnam_r \
+	-Dgetpwuid=busybox_getpwuid \
+	-Dgetmntent=busybox_getmntent \
+	-Dgetmntent_r=busybox_getmntent_r \
+	-Dendpwent=busybox_endpwent
 
 ifeq ($(BIONIC_L),true)
     BUSYBOX_CFLAGS += -DBIONIC_L
@@ -192,19 +216,14 @@ LOCAL_SRC_FILES := $(BUSYBOX_SRC_FILES)
 LOCAL_C_INCLUDES := $(TARGET_OUT_INTERMEDIATES)/busybox/$(MINIMAL)/include $(BUSYBOX_C_INCLUDES)
 LOCAL_CFLAGS := -Dmain=busybox_driver $(BUSYBOX_CFLAGS)
 LOCAL_CFLAGS += \
-  -DRECOVERY_VERSION \
-  -Dgetusershell=busybox_getusershell \
-  -Dsetusershell=busybox_setusershell \
-  -Dendusershell=busybox_endusershell \
-  -Dgetmntent=busybox_getmntent \
-  -Dgetmntent_r=busybox_getmntent_r \
-  -Dgenerate_uuid=busybox_generate_uuid
+  -DRECOVERY_VERSION
+
 LOCAL_ASFLAGS := $(BUSYBOX_AFLAGS)
 LOCAL_MODULE := libbusybox
 LOCAL_MODULE_TAGS := eng debug
 LOCAL_REQUIRED_MODULES := login
 #$(LOCAL_MODULE): busybox_prepare
-LOCAL_STATIC_LIBRARIES := libcutils libc libm libselinux
+LOCAL_STATIC_LIBRARIES := libcutils libselinux
 LOCAL_ADDITIONAL_DEPENDENCIES := $(busybox_prepare_minimal)
 
 ifeq ($(shell test $(PLATFORM_SDK_VERSION) -ge 26 && echo OK),OK)
@@ -224,16 +243,6 @@ LOCAL_SRC_FILES := $(BUSYBOX_SRC_FILES)
 LOCAL_C_INCLUDES := $(TARGET_OUT_INTERMEDIATES)/busybox/$(FULL)/include $(BUSYBOX_C_INCLUDES)
 LOCAL_CFLAGS := $(BUSYBOX_CFLAGS)
 LOCAL_ASFLAGS := $(BUSYBOX_AFLAGS)
-LOCAL_CFLAGS += \
-  -Dgetgrgid=busybox_getgrgid \
-  -Dgetgrnam=busybox_getgrnam \
-  -Dgetgrouplist=busybox_getgrouplist \
-  -Dgetpwnam=busybox_getpwnam \
-  -Dgetpwnam_r=busybox_getpwnam_r \
-  -Dgetpwuid=busybox_getpwuid \
-  -Dgetmntent=busybox_getmntent \
-  -Dgetmntent_r=busybox_getmntent_r \
-  -Dendpwent=busybox_endpwent
 
 LOCAL_MODULE := busybox
 LOCAL_MODULE_TAGS := eng debug
@@ -243,7 +252,7 @@ LOCAL_MODULE_PATH := $(TARGET_OUT_VENDOR)/xbin
 else
 LOCAL_MODULE_PATH := $(TARGET_OUT_OPTIONAL_EXECUTABLES)
 endif
-LOCAL_SHARED_LIBRARIES := libc libcutils libm
+LOCAL_SHARED_LIBRARIES := libcutils
 #$(LOCAL_MODULE): busybox_prepare
 LOCAL_STATIC_LIBRARIES += libclearsilverregex libuclibcrpc libselinux
 LOCAL_ADDITIONAL_DEPENDENCIES := $(busybox_prepare_full)
@@ -282,23 +291,13 @@ BUSYBOX_SUFFIX:=static
 LOCAL_SRC_FILES := $(BUSYBOX_SRC_FILES)
 LOCAL_C_INCLUDES := $(TARGET_OUT_INTERMEDIATES)/busybox/$(MINIMAL)/include $(BUSYBOX_C_INCLUDES)
 LOCAL_CFLAGS := $(BUSYBOX_CFLAGS)
-LOCAL_CFLAGS += \
-  -Dgetgrgid=busybox_getgrgid \
-  -Dgetgrnam=busybox_getgrnam \
-  -Dgetgrouplist=busybox_getgrouplist \
-  -Dgetpwnam=busybox_getpwnam \
-  -Dgetpwnam_r=busybox_getpwnam_r \
-  -Dgetpwuid=busybox_getpwuid \
-  -Dgetmntent=busybox_getmntent \
-  -Dgetmntent_r=busybox_getmntent_r \
-  -Dendpwent=busybox_endpwent
 
 LOCAL_ASFLAGS := $(BUSYBOX_AFLAGS)
 LOCAL_FORCE_STATIC_EXECUTABLE := true
 LOCAL_MODULE := static_busybox
 LOCAL_MODULE_STEM := busybox
 LOCAL_MODULE_TAGS := optional
-LOCAL_STATIC_LIBRARIES := libclearsilverregex libc libcutils libm libuclibcrpc libselinux
+LOCAL_STATIC_LIBRARIES := libclearsilverregex libcutils libuclibcrpc libselinux
 LOCAL_MODULE_CLASS := EXECUTABLES
 LOCAL_MODULE_PATH := $(PRODUCT_OUT)/utilities
 LOCAL_UNSTRIPPED_PATH := $(PRODUCT_OUT)/symbols/utilities
@@ -332,27 +331,18 @@ LOCAL_CFLAGS := $(BUSYBOX_CFLAGS)
 LOCAL_ASFLAGS := $(BUSYBOX_AFLAGS)
 LOCAL_FORCE_STATIC_EXECUTABLE := true
 LOCAL_CFLAGS += \
-  -Dlogin_main=main \
-  -Dgetgrgid=busybox_getgrgid \
-  -Dgetgrnam=busybox_getgrnam \
-  -Dgetgrouplist=busybox_getgrouplist \
-  -Dgetpwnam=busybox_getpwnam \
-  -Dgetpwnam_r=busybox_getpwnam_r \
-  -Dgetpwuid=busybox_getpwuid \
-  -Dgetmntent=busybox_getmntent \
-  -Dgetmntent_r=busybox_getmntent_r \
-  -Dendpwent=busybox_endpwent
+  -Dlogin_main=main
 
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := login
 LOCAL_MODULE_CLASS := EXECUTABLES
-ifeq ($(shell test $(PLATFORM_SDK_VERSION) -ge 26 && echo OK),OK)
-LOCAL_MODULE_PATH := $(TARGET_OUT_VENDOR)/bin
-else
+#ifeq ($(shell test $(PLATFORM_SDK_VERSION) -ge 26 && echo OK),OK)
+#LOCAL_MODULE_PATH := $(TARGET_OUT_VENDOR)/bin
+#else
 LOCAL_MODULE_PATH := $(TARGET_OUT)/bin
-endif
+#endif
 LOCAL_SRC_FILES := loginutils/login.c
-LOCAL_STATIC_LIBRARIES := libbusybox libclearsilverregex libc libcutils libm libuclibcrpc libselinux
+LOCAL_STATIC_LIBRARIES := libbusybox libclearsilverregex libcutils libuclibcrpc libselinux
 LOCAL_REQUIRED_MODULES := login_recovery passwd passwd_recovery
 LOCAL_ADDITIONAL_DEPENDENCIES := $(busybox_prepare_minimal)
 $(info "add console passwd protect end")
@@ -367,16 +357,7 @@ LOCAL_CFLAGS := $(BUSYBOX_CFLAGS)
 LOCAL_ASFLAGS := $(BUSYBOX_AFLAGS)
 LOCAL_FORCE_STATIC_EXECUTABLE := true
 LOCAL_CFLAGS += \
-  -Dlogin_main=main \
-  -Dgetgrgid=busybox_getgrgid \
-  -Dgetgrnam=busybox_getgrnam \
-  -Dgetgrouplist=busybox_getgrouplist \
-  -Dgetpwnam=busybox_getpwnam \
-  -Dgetpwnam_r=busybox_getpwnam_r \
-  -Dgetpwuid=busybox_getpwuid \
-  -Dgetmntent=busybox_getmntent \
-  -Dgetmntent_r=busybox_getmntent_r \
-  -Dendpwent=busybox_endpwent
+  -Dlogin_main=main
 
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE_STEM := login
@@ -387,7 +368,7 @@ LOCAL_SRC_FILES := loginutils/login.c
 ifeq ($(shell test $(PLATFORM_SDK_VERSION) -ge 28 && echo OK),OK)
 LOCAL_VENDOR_MODULE := true
 endif
-LOCAL_STATIC_LIBRARIES := libbusybox libclearsilverregex libc libcutils libm libuclibcrpc libselinux
+LOCAL_STATIC_LIBRARIES := libbusybox libclearsilverregex libcutils libuclibcrpc libselinux
 LOCAL_REQUIRED_MODULES := passwd passwd_recovery
 LOCAL_ADDITIONAL_DEPENDENCIES := $(busybox_prepare_minimal)
 $(info "add console passwd protect end")
@@ -397,11 +378,11 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := passwd
 LOCAL_MODULE_CLASS := ETC
 LOCAL_MODULE_TAGS := optional
-ifeq ($(shell test $(PLATFORM_SDK_VERSION) -ge 26 && echo OK),OK)
-LOCAL_MODULE_PATH := $(TARGET_OUT_VENDOR)/etc/
-else
+#ifeq ($(shell test $(PLATFORM_SDK_VERSION) -ge 26 && echo OK),OK)
+#LOCAL_MODULE_PATH := $(TARGET_OUT_VENDOR)/etc/
+#else
 LOCAL_MODULE_PATH := $(TARGET_OUT)/etc/
-endif
+#endif
 LOCAL_SRC_FILES := ./etc/$(LOCAL_MODULE)
 include $(BUILD_PREBUILT)
 

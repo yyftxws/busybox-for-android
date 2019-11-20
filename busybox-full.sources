@@ -69,7 +69,7 @@ procps/free.c procps/fuser.c procps/kill.c procps/pgrep.c procps/pidof.c procps/
 procps/pmap.c procps/iostat.c procps/mpstat.c
 procps/lsof.c procps/nmeter.c procps/pstree.c procps/pwdx.c procps/smemcap.c
 
-shell/ash.c shell/ash_ptr_hack.c shell/math.c shell/random.c shell/shell_common.c
+shell/ash_ptr_hack.c shell/math.c shell/random.c shell/shell_common.c
 
 libbb/selinux_common.c android/selinux/matchpathcon.c android/selinux/stubs.c
 selinux/chcon.c selinux/selinuxenabled.c

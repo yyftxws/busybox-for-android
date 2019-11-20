@@ -579,8 +579,11 @@ extern int vasprintf(char **string_ptr, const char *format, va_list p) FAST_FUNC
 extern ssize_t getline(char **lineptr, size_t *n, FILE *stream) FAST_FUNC;
 #endif
 
+/* add by Young@2018,2,9 to fix compile error */
 #if defined(BIONIC_ICS) && !defined(BIONIC_L)
 #include <android.h>
+/* Young add end */
 #endif
-
+/* add by Young@2018,2,9 to fix compile error */
 #endif
+/* Young add end */

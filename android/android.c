@@ -76,7 +76,9 @@ int addmntent(FILE *fp UNUSED_PARAM, const struct mntent *mnt UNUSED_PARAM)
 	return 1;
 }
 
+/* add by Young@2018,2,9 to fix compile error */
 #if ANDROID_PLATFORM_SDK_VERSION < 26 //8.0
+/* Young add end */
 char *hasmntopt(const struct mntent *mnt, const char *opt)
 {
 	char *o = mnt->mnt_opts;
@@ -87,11 +89,21 @@ char *hasmntopt(const struct mntent *mnt, const char *opt)
 			 (o[l] != 0 && o[l] != ',' && o[l] != '=')));
 	return o;
 }
+/* add by Young@2018,2,9 to fix compile error */
 #endif
+/* Young add end */
 
 /* declared in grp.h, but not necessary */
 #if !ENABLE_USE_BB_PWD_GRP
+
+/* add by Young@2018,2,9 to fix compile error */
+#if ANDROID_PLATFORM_SDK_VERSION < 26 //8.0
+/* Young add end */
 int setpwent() { return 0; }
+/* add by Young@2018,2,9 to fix compile error */
+#endif
+/* Young add end */
+
 void setgrent() {}
 void endgrent() {}
 #endif

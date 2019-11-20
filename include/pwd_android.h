@@ -65,18 +65,41 @@
 #include <sys/cdefs.h>
 #include <sys/types.h>
 
+
+#ifndef _PATH_PASSWD
 #define _PATH_PASSWD        "/etc/passwd"
+#endif
+
+#ifndef _PATH_MASTERPASSWD
 #define _PATH_MASTERPASSWD  "/etc/master.passwd"
+#endif
+
+#ifndef _PATH_MASTERPASSWD_LOCK
 #define _PATH_MASTERPASSWD_LOCK "/etc/ptmp"
+#endif
 
+#ifndef _PATH_PASSWD_CONF
 #define _PATH_PASSWD_CONF   "/etc/passwd.conf"
+#endif
+
 #define _PATH_PASSWDCONF    _PATH_PASSWD_CONF   /* XXX: compat */
+
+
+#ifndef _PATH_USERMGMT_CONF
 #define _PATH_USERMGMT_CONF "/etc/usermgmt.conf"
+#endif
 
+#ifndef _PATH_MP_DB
 #define _PATH_MP_DB     "/etc/pwd.db"
-#define _PATH_SMP_DB        "/etc/spwd.db"
+#endif
 
+#ifndef _PATH_SMP_DB
+#define _PATH_SMP_DB        "/etc/spwd.db"
+#endif
+
+#ifndef _PATH_PWD_MKDB
 #define _PATH_PWD_MKDB      "/usr/sbin/pwd_mkdb"
+#endif
 
 #define _PW_KEYBYNAME       '1' /* stored by name */
 #define _PW_KEYBYNUM        '2' /* stored by entry in the "file" */

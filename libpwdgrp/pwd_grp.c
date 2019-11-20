@@ -253,9 +253,11 @@ static void *convert_to_struct(struct passdb *db,
 	const char *def = db->def;
 	const uint8_t *off = db->off;
 
+/* add by Young@2018,2,9 to fix get passwd error */
 #if defined(BIONIC_ICS) && !defined(BIONIC_L)
 	int err = 0;
 #endif
+/* Young add end */
 	/* For consistency, zero out all fields */
 	memset(result, 0, db->size_of);
 
@@ -265,11 +267,15 @@ static void *convert_to_struct(struct passdb *db,
 		if ((*def | 0x20) == 's') { /* s or S */
 			*(char **)member = (char*)buffer;
 			if (!buffer[0] && (*def == 'S')) {
+/* add by Young@2018,2,9 to fix get passwd error */
 #if defined(BIONIC_ICS) && !defined(BIONIC_L)
 				err = errno = EINVAL;
 #else
+/* Young add end */
 				errno = EINVAL;
+/* add by Young@2018,2,9 to fix get passwd error */
 #endif
+/* Young add end */
 			}
 		}
 		if (*def == 'I') {
@@ -314,11 +320,15 @@ static void *convert_to_struct(struct passdb *db,
 		buffer += strlen(buffer) + 1;
 	}
 
+/* add by Young@2018,2,9 to fix get passwd error */
 #if defined(BIONIC_ICS) && !defined(BIONIC_L)
 	if (0!=err)
 #else
+/* Young add end */
 	if (errno)
+/* add by Young@2018,2,9 to fix get passwd error */
 #endif
+/* Young add end */
 		result = NULL;
 	return result;
 }

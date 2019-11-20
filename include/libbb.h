@@ -65,11 +65,17 @@
 #include <termios.h>
 #include <time.h>
 #include <sys/param.h>
-#if defined(BIONIC_ICS) && !defined(BIONIC_L)
-#include "pwd_ics.h"
+
+/* add by Young@2018,2,9 to fix compile error */
+#if defined(ANDROID)
+#include "pwd_android.h"
 #else
+/* Young add end */
 #include <pwd.h>
+/* add by Young@2018,2,9 to fix compile error */
 #endif
+/* Young add end */
+
 #include <grp.h>
 #if ENABLE_FEATURE_SHADOWPASSWDS
 # if !ENABLE_USE_BB_SHADOW
@@ -183,6 +189,11 @@
 # define XTABS TAB3
 #endif
 
+#if ANDROID_PLATFORM_SDK_VERSION >= 26 //8.0
+struct res_state;
+extern struct __res_state *__res_state(void);
+#define _res (*__res_state())
+#endif
 
 /* Some libc's forget to declare these, do it ourself */
 

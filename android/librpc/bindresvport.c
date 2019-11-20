@@ -38,7 +38,6 @@
 #include <string.h>
 #ifdef ANDROID
 #include <rpc/types.h>
-extern long __set_errno(int n);
 #else
 #include <sys/types.h>
 #endif
@@ -52,6 +51,13 @@ extern long __set_errno(int n);
 /*
  * Bind a socket to a privileged IP port
  */
+
+static long __set_errno(int n)
+{
+    errno = n;
+    return -1;
+}
+
 int
 bindresvport (int sd, struct sockaddr_in *sin)
 {

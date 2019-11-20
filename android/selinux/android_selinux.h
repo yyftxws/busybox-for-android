@@ -142,9 +142,10 @@ static int selinux_getenforcemode(int *rc)
 	}
 	return -1;
 }
+/* add by Young@2018,2,9 to fix compile error */
 #else
 extern int selinux_getenforcemode(int *rc);
-
+/* Young add end */
 #endif
 
 static const char *selinux_file_contexts_path()

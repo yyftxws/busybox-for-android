@@ -11,7 +11,7 @@
 #ifndef BB_REGEX_H
 #define BB_REGEX_H 1
 
-#if defined(ANDROID) && !defined(RECOVERY_VERSION)
+#if defined(ANDROID)
 
 #include <bb_regex.h>
 #define regcomp bb_regcomp

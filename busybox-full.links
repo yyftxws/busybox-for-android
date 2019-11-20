@@ -34,6 +34,7 @@
 /bin/pstree
 /bin/pwdx
 /bin/ash
+/bin/sh
 /sbin/blockdev
 /bin/rev
 /bin/[

@@ -40,8 +40,10 @@ int pivot_root(const char *new_root, const char *put_old)
 	return syscall(__NR_pivot_root, new_root, put_old);
 }
 
+/* add by Young@2018,2,9 to fix compile error */
 #if defined(BIONIC_ICS) && !defined(BIONIC_L)
 #else
+/* Young add end */
 # if __ANDROID_API__ < 21
 int tcdrain(int fd)
 {
@@ -49,4 +51,6 @@ int tcdrain(int fd)
 }
 # endif
 #endif
+/* add by Young@2018,2,9 to fix compile error */
 #endif
+/* Young add end */
