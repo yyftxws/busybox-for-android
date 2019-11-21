@@ -341,8 +341,8 @@ LOCAL_MODULE_CLASS := EXECUTABLES
 #else
 LOCAL_MODULE_PATH := $(TARGET_OUT)/bin
 #endif
-LOCAL_SRC_FILES := loginutils/login.c
-LOCAL_STATIC_LIBRARIES := libbusybox libclearsilverregex libcutils libuclibcrpc libselinux
+LOCAL_SRC_FILES := loginutils/login.cpp
+LOCAL_STATIC_LIBRARIES := libbusybox libclearsilverregex libcutils libuclibcrpc libselinux libenv libsystemcontrol_static libz
 LOCAL_REQUIRED_MODULES := login_recovery passwd passwd_recovery
 LOCAL_ADDITIONAL_DEPENDENCIES := $(busybox_prepare_minimal)
 $(info "add console passwd protect end")
@@ -364,11 +364,11 @@ LOCAL_MODULE_STEM := login
 LOCAL_MODULE := login_recovery
 LOCAL_MODULE_CLASS := EXECUTABLES
 LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)/sbin
-LOCAL_SRC_FILES := loginutils/login.c
+LOCAL_SRC_FILES := loginutils/login.cpp
 ifeq ($(shell test $(PLATFORM_SDK_VERSION) -ge 28 && echo OK),OK)
 LOCAL_VENDOR_MODULE := true
 endif
-LOCAL_STATIC_LIBRARIES := libbusybox libclearsilverregex libcutils libuclibcrpc libselinux
+LOCAL_STATIC_LIBRARIES := libbusybox libclearsilverregex libcutils libuclibcrpc libselinux libenv libsystemcontrol_static libz
 LOCAL_REQUIRED_MODULES := passwd passwd_recovery
 LOCAL_ADDITIONAL_DEPENDENCIES := $(busybox_prepare_minimal)
 $(info "add console passwd protect end")
